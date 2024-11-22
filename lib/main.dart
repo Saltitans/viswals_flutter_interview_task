@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:viswals_flutter_interview_task/services/countries_service.dart';
+import 'package:viswals_flutter_interview_task/services/file_pick_service.dart';
+import 'package:viswals_flutter_interview_task/state/user_profile_provider.dart';
+import 'package:viswals_flutter_interview_task/ui/screens/user_profile/user_profile_screen.dart';
+import 'package:viswals_flutter_interview_task/ui/style/system_ui_overlay.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<CountriesService>(create: (_) => CountriesService()),
+        Provider<FilePickService>(create: (_) => FilePickService()),
+        ChangeNotifierProvider<UserProfileProvider>(
+          create: (_) => UserProfileProvider(),
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -9,12 +27,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(systemUIOverlayStyle);
+
     return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: UserProfileScreen(),
     );
   }
 }
